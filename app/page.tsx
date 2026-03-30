@@ -1,40 +1,62 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Home() {
   const [step, setStep] = useState(1);
   const [name, setName] = useState("");
+  const [soundError, setSoundError] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
-  const startCheckIn = async () => {
-    if (videoRef.current) {
-      videoRef.current.muted = false;
-      try {
-        await videoRef.current.play();
-      } catch (err) {
-        console.log("Autoplay blocked:", err);
-      }
+  const playGreeting = async () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    try {
+      setSoundError(false);
+      video.currentTime = 0;
+      video.muted = false;
+      video.volume = 1;
+      await video.play();
+    } catch (error) {
+      setSoundError(true);
+      console.log("Autoplay with sound was blocked:", error);
     }
+  };
+
+  useEffect(() => {
+    void playGreeting();
+  }, []);
+
+  const startCheckIn = async () => {
     setStep(2);
   };
 
   return (
     <main className="min-h-screen bg-neutral-50 flex items-center justify-center p-6">
       <div className="w-full max-w-md bg-white rounded-3xl shadow-sm border p-6">
-        
-        {/* Video */}
         <video
           ref={videoRef}
           src="/welcome.mp4"
           autoPlay
-          loop
-          muted
           playsInline
-          className="w-full rounded-2xl mb-6"
+          preload="auto"
+          className="w-full rounded-2xl mb-4"
         />
 
-        {/* Step 1 */}
+        <button
+          onClick={playGreeting}
+          className="w-full mb-6 rounded-xl border py-3 text-lg font-medium"
+        >
+          Listen again
+        </button>
+
+        {soundError && (
+          <p className="text-sm text-gray-500 mb-4">
+            Your browser blocked autoplay with sound. Tap “Listen again” once to enable it.
+          </p>
+        )}
+
         {step === 1 && (
           <>
             <h1 className="text-3xl font-bold mb-2">Welcome 👋</h1>
@@ -51,15 +73,10 @@ export default function Home() {
           </>
         )}
 
-        {/* Step 2 */}
         {step === 2 && (
           <>
-            <h1 className="text-2xl font-bold mb-2">
-              Find your reservation
-            </h1>
-            <p className="text-gray-600 mb-4">
-              Enter your name to continue.
-            </p>
+            <h1 className="text-2xl font-bold mb-2">Find your reservation</h1>
+            <p className="text-gray-600 mb-4">Enter your name to continue.</p>
 
             <input
               value={name}
@@ -77,7 +94,6 @@ export default function Home() {
           </>
         )}
 
-        {/* Step 3 */}
         {step === 3 && (
           <>
             <h1 className="text-2xl font-bold mb-2">
