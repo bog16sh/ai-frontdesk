@@ -7,13 +7,22 @@ export default function Home() {
   const [name, setName] = useState("");
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-neutral-50 p-6">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-sm border">
+    <main className="min-h-screen bg-neutral-50 p-6 flex items-center justify-center">
+      <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-sm border">
+        <video
+          src="/welcome.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full rounded-2xl mb-5"
+        />
+
         {step === 1 && (
           <>
-            <h1 className="text-3xl font-bold mb-3">Welcome 👋</h1>
+            <h1 className="text-3xl font-bold mb-2">Welcome</h1>
             <p className="text-gray-600 mb-6">
-              Start your check-in in just a few seconds.
+              Your virtual front desk assistant is ready.
             </p>
 
             <button
@@ -27,10 +36,8 @@ export default function Home() {
 
         {step === 2 && (
           <>
-            <h1 className="text-2xl font-bold mb-3">Find your reservation</h1>
-            <p className="text-gray-600 mb-4">
-              Enter your name to continue.
-            </p>
+            <h1 className="text-2xl font-bold mb-2">Find your reservation</h1>
+            <p className="text-gray-600 mb-4">Enter your name to continue.</p>
 
             <input
               value={name}
@@ -50,9 +57,11 @@ export default function Home() {
 
         {step === 3 && (
           <>
-            <h1 className="text-2xl font-bold mb-3">Hello, {name || "guest"}!</h1>
-            <p className="text-gray-600 mb-6">
-              Your reservation is ready. You are checked in.
+            <h1 className="text-2xl font-bold mb-2">
+              Hello, {name || "guest"}!
+            </h1>
+            <p className="text-gray-600 mb-4">
+              You are checked in. Here is your info:
             </p>
 
             <div className="rounded-xl bg-neutral-100 p-4 mb-4">
